@@ -1,0 +1,38 @@
+---
+- hosts: all
+  become: yes
+  remote_user: mjmax
+
+  tasks:
+
+    - name: Install docker
+      yum:
+        name: docker
+        state: latest
+
+    - name: Start docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Crete web folder
+      file:
+        path: /web-data
+        state: directory
+
+    - name: Install nginx
+      yum:
+        name: nginx
+        state: present
+
+    - name: Start nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Copy template
+      template:
+        src: template.j2
+        dest: /usr/share/nginx/html/index.html
